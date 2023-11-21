@@ -186,12 +186,12 @@ function renderNewspaper(pageCount, news){
 }
 
 // function điều chỉnh số trang 
-async function adjustNumberOfPage(newsPerPage){
+async function adjustNumberOfPage(pageCount){
 
   //chia lại số trang theo số lượng bài và số lượng bài mỗi trang
   const indexForIterate = []
-  console.log(newsPerPage);
-  for (let i =2; i<=newsPerPage; i++){
+  console.log(pageCount);
+  for (let i =2; i<=pageCount; i++){
     indexForIterate.push(i)
   }
   let html = ``

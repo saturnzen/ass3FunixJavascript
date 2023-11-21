@@ -99,8 +99,8 @@ submitBtn.addEventListener('click', function(){
     userDataArr.push(gotUser)  
     // #2.2 Lưu dữ liệu xuống LocalStorage.
     saveToStorage(KEY, JSON.stringify(userDataArr));
+    
+      //chuyển sang trang đăng nhập
+      window.location = window.location.href.slice(0,-13)+'login.html'
   }
-
-  //chuyển sang trang đăng nhập
-  window.location = window.location.href.slice(0,-13)+'login.html'
 })

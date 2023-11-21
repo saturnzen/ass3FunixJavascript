@@ -33,6 +33,8 @@ const pagination = document.querySelector(".pagination")
 const pageNum = document.getElementById("page--num")
 let pageItem
 let pageNumByItem
+// dùng để thiết đặt số lượng bài load
+let arrLength = 100;
 
 //Advanced
 const queryInput = document.getElementById("input-query")
@@ -86,12 +88,12 @@ async function getNews(query){
   //số bài viết trong data.articles ít hơn giá trị của totalResults,
   //nên đặt theo thông số nào?
   //đặt tham số là 20 để tiện theo dõi
-  pageCount = await Math.round(20/newsPerPage)
+  pageCount = await Math.round(arrLength/newsPerPage)
   // chia lại các bài viết theo trang
   adjustNumberOfPage(pageCount)
   //push các bài viết vào trang
   newsArr.forEach((page,index) =>{
-    console.log(Math.floor((index)/newsPerPage)+1);
+    // console.log(Math.floor((index)/newsPerPage)+1);
     renderNewspaper(Math.floor(index/newsPerPage)+1,page)
   })
 
@@ -132,10 +134,15 @@ function showPaperWithBtn(){
   
   //hiển thị lại trang đang ở trên pagination
   pageNumByItem[indexPag + kTwo].classList.add('disabled')
-  console.log(Number(disabledPage.textContent)+kOne, indexPag, indexPag + kTwo);
+  pageNumByItem[indexPag + kTwo].classList.remove('d-none')
+  
   pageNumByItem[indexPag].classList.remove('disabled')
+  pageNumByItem[indexPag].classList.toggle('d-none')
+  pageNumByItem[indexPag+3].classList.toggle('d-none')
 
 
+  pagination.removeChild(document.querySelector(".dotFake"))
+  defaultPagNumberDisplay()
   //xử lý các sự kiện khi ấn nút Next và Previous 
   if(indexPag != pageCount){
     // hiển thị nút nextBtn khi ấn Previous khi ở trang cuối
@@ -189,22 +196,19 @@ function renderNewspaper(pageCount, news){
 }
 
 // function điều chỉnh số trang 
-async function adjustNumberOfPage(newsPerPage){
+async function adjustNumberOfPage(pageCount){
 
   //chia lại số trang theo số lượng bài và số lượng bài mỗi trang
   const indexForIterate = []
-  console.log(newsPerPage);
-  for (let i =2; i<=newsPerPage; i++){
+  console.log(pageCount);
+  for (let i =2; i<=pageCount; i++){
     indexForIterate.push(i)
   }
   let html = ``
   indexForIterate.forEach(num =>{html = html + `<li class="page-item disabled" id ="page--num">
     <a class="page-link" href="#" id="page-num">${num}</a></li>
     `})
-
   await pageNum.insertAdjacentHTML("afterend", html)
-
-  
   // #7.2 Khi nhấn vào nút, số page hiện tại được cập nhật tương ứng.
   //điều chỉnh hiệu ứng ở các nút hiển thị vị trí trang đang xem
   //chỉ thực thi khi đã có hết các số trang
@@ -215,6 +219,14 @@ async function adjustNumberOfPage(newsPerPage){
   //xóa hiệu ứng trên tất cả, sau đó thêm vào page hiện hành (page 1)
   pageNumByItem.forEach(page =>page.classList.remove('disabled'))
   pageNumByItem[0].classList.add('disabled')
+
+  // ẩn chỉ để lại 3 số đầu và số cuối nếu quá dài
+  if (pageCount >5){
+    pageNumByItem.forEach(page =>page.classList.add('d-none'))
+    pageNumByItem[2].classList.remove('d-none')
+    pageNumByItem[1].classList.remove('d-none')
+    defaultPagNumberDisplay()
+  }
 
   //ẩn nút Previous khi ở trang 1
   //7.3 Khi đang ở Page số 1 thì nút "Previous" sẽ bị ẩn đi.
@@ -227,10 +239,26 @@ async function adjustNumberOfPage(newsPerPage){
   const newsPaperEls = document.querySelectorAll(`.newspaper-in--1`)
   newsPaperEls.forEach(newspaper => newspaper.classList.remove('d-none'))
 
-};
+  ;
+;
+}
+
+function defaultPagNumberDisplay(){
+    pageNumByItem[0].classList.remove('d-none')
+    pageNumByItem[pageCount-1].classList.remove('d-none')
+    addDotFakeLength(pageNumByItem[pageCount-1], "beforeBegin")
+    document.querySelector(".dotFake").classList.add("disabled")
+}
 
 
-
+// chèn dấu ba chấm vào trang
+function addDotFakeLength(obj, position){
+  let html =
+      `<li class="page-item dotFake" id ="page--num">
+      <a class="page-link" href="#" id="page-num">...</a></li>
+      ` 
+  obj.insertAdjacentHTML(position,html)
+}
 
 //Các sự kiện
 
@@ -250,17 +278,21 @@ pagination.addEventListener("click", function(e){
     clicked.classList.add('disabled')
 
     //dựa trên số trên thanh pagination
+    reachTo = Number(clicked.textContent)
     const newsPaperEls = document.querySelectorAll(`.newspaper-in--${Number(clicked.textContent)}`)
     newsPaperEls.forEach(newspaper => newspaper.classList.remove('d-none'))
 
     console.log(clicked.textContent)
+
     //xử lý khi chọn trang đầu hoặc trang cuối
     if(clicked.textContent == pageCount){
 
       //7.4 Nếu như không thể lấy thêm các bài viết nữa, nút "Next" sẽ bị ẩn đi.
       //ẩn nút Next và hiển thị lại nút Previous
+
       hideNextButton()
       showPreviousButton()
+      defaultPagNumberDisplay()
     }else if(clicked.textContent == 1){
       // 7.3 Khi đang ở Page số 1 thì nút "Previous" sẽ bị ẩn đi.
       //ẩn nút Previous và hiển thị lại nút Next
@@ -272,6 +304,9 @@ pagination.addEventListener("click", function(e){
       showPreviousButton()
     }
   }
+  pagination.removeChild(document.querySelector(".dotFake"))
+  defaultPagNumberDisplay()
+
 })
 
 
@@ -291,3 +326,34 @@ submitBtn.addEventListener('click',function(){
     }
   }
 )
+let reachTo = 2
+
+// Lazy loading images  Bankist app - jonas schmedtmann
+const imgTargets = document.querySelectorAll('li.page-item')
+
+const loadImg = function(entries, observer){
+
+  const [entry] = entries;
+  // console.log(entry);
+
+  if(!entry.isIntersecting) return;
+
+  //Replace src with data-src
+  // entry.target.src = entry.target.dataset.src
+  
+  const newspaperContainers = document.querySelectorAll(".newspapers-containers")
+  const newsPaperEls = document.querySelectorAll(`.newspaper-in--${reachTo}`)
+  newsPaperEls.forEach(newspaper => newspaper.classList.remove('d-none'))
+  reachTo ++
+  // console.log(reachTo);
+  // observer.unobserve(entry.target)
+}
+
+const imgObserver = new IntersectionObserver(loadImg, {
+
+  root: null,
+  threshold: 0,
+  rootMargin: '0px',
+})
+
+imgTargets.forEach(img => imgObserver.observe(img))
