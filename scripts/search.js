@@ -7,7 +7,7 @@ const settingStorage =
     ? []
     : JSON.parse(getFromStorage("setting_ARR"));
 //dữ liệu người dùng hiện tại
-let currentUser;
+let currentUser = "currentUser";
 const userLogin = 
   getFromStorage(currentUser) === undefined
     ? alert("please login or register to create and see your todo list")

@@ -6,10 +6,10 @@ const settingStorage =
     ? []
     : JSON.parse(getFromStorage("setting_ARR"));
 //dữ liệu người dùng hiện tại
-let currentUser;
+let currentUser = "currentUser";
 const userLogin = 
   getFromStorage(currentUser) === undefined
-    ? alert("please login or register to create and see your todo list")
+    ? alert("please login or register to create and see your settings")
     : JSON.parse(getFromStorage(currentUser));
     
 const userSetting = settingStorage.filter(set => set.owner === userLogin.userName)
@@ -226,7 +226,7 @@ async function adjustNumberOfPage(pageCount){
 
 };
 
-getNews()
+getNews().catch(err => console.log(err, "lỗi không tải anh"))
 
 
 //Các sự kiện

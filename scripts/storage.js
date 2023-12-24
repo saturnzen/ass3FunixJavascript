@@ -13,3 +13,22 @@ function getFromStorage(key, defaultVal) {
   return localStorage.getItem(key) ?? defaultVal;
 }
 
+
+
+// Lấy thông tin từ localStorage để validate
+
+function getLocalStorage(KEY = "USER_ARRAY"){
+  const userDataArr =
+    getFromStorage(KEY) === undefined
+      ? []
+     : JSON.parse(getFromStorage(KEY));
+  
+  const userDataID = [];
+
+  userDataArr.forEach((user) => {
+    userDataID.push(user.userName);
+    user.__proto__ = Object.create(User.prototype);
+  });
+
+  return {userDataArr, userDataID}
+}

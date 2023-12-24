@@ -30,7 +30,7 @@ const todoArr =
     : JSON.parse(getFromStorage(KEY));
 
 // Lấy thông tin người dùng, nếu chưa đăng nhập thì dùng như local
-let currentUser
+let currentUser = "currentUser"
 const userLogin = 
   getFromStorage(currentUser) === undefined
   ? alert("please login or register to create and see your todo list")

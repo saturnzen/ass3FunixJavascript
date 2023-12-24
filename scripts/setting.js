@@ -6,10 +6,24 @@ const submitBtn = document.getElementById("btn-submit")
 
 class Setting{
   constructor(owner, category, pageSize){
-    this.owner = owner
-    this.category = category
+    this.owner = owner,
+    this.category = category,
     this.pageSize = pageSize
-  }
+  };
+
+
+    
+  //đẩy setting trước đó ra màn hình, 
+  _renderSetting(){
+    if(!setting){
+      categoryInput.value = defaultValt.category
+      pageSizeInput.value = defaultValt.pageSize
+    }else{
+      //9.4 hiển thị các tham số cài đặt trước đó ra cho người dùng xem
+    categoryInput.value = setting.category
+    pageSizeInput.value = setting.pageSize
+  }};
+
 }
 
 //dùng cho mặc định
@@ -22,7 +36,7 @@ const settingStorage =
     : JSON.parse(getFromStorage(KEY));
 
 //dữ liệu người dùng hiện tại
-let currentUser
+let currentUser = "currentUser";
 const userLogin = 
   getFromStorage(currentUser) === undefined
     ? alert("please login or register to create and see your todo list")
@@ -30,21 +44,9 @@ const userLogin =
     
   const userSetting = settingStorage.filter(set => set.owner === userLogin.userName)
   const setting = userSetting[0]
+  setting.__proto__ = Object.create(Setting.prototype)
   console.log(setting);
-
-
-//đẩy setting trước đó ra màn hình, 
-function renderSetting(){
-  if(!setting){
-    categoryInput.value = defaultValt.category
-    pageSizeInput.value = defaultValt.pageSize
-  }else{
-    //9.4 hiển thị các tham số cài đặt trước đó ra cho người dùng xem
-  categoryInput.value = setting.category
-  pageSizeInput.value = setting.pageSize
-}}
-
-renderSetting()
+  setting._renderSetting()
 
 // 9.2  Có validate dữ liệu nếu người dùng không nhập.
 //kiểm tra dữ liệu trống 
