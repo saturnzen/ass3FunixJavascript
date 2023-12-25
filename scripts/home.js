@@ -12,7 +12,7 @@ if (getFromStorage(currentUser) === undefined){
   mainContent.classList.add("d-none")
 }else{
   // #4.2 người dùng đã đăng nhập, 
-  const userLogin = JSON.parse(getFromStorage(currentUser))
+  const userLogin = getUserLogin()
   //hiển thị thông điệp chào mừng như sau: "Welcome + firstname" và nút Logout
   loginModal.classList.add('d-none')
   welcomeMessage.textContent = `Welcome ${userLogin.firstName}`

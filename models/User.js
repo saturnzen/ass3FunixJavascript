@@ -111,3 +111,47 @@ class User{
   };
 
 };
+
+class Setting{
+  constructor(owner, category, pageSize){
+    this.owner = owner,
+    this.category = category,
+    this.pageSize = pageSize
+  };
+
+      
+  //đẩy setting trước đó ra màn hình, 
+  _renderSetting(){
+      //9.4 hiển thị các tham số cài đặt trước đó ra cho người dùng xem
+    categoryInput.value = this.category
+    pageSizeInput.value = this.pageSize
+  };
+
+  // 9.2  Có validate dữ liệu nếu người dùng không nhập.
+  _validateNumber(){
+    if (pageSizeInput.value === "") {
+      //có trống không
+      alert(`Xin mời nhập số lượng bài báo muốn hiển thị mỗi trang`);
+    } else {
+      //trả về true để tiến hành ghi vào class
+      return true;
+    }
+  };
+
+  _saveSetting(){
+    if(this._validateNumber()){
+      this.category = categoryInput.value;
+      this.pageSize = pageSizeInput.value;
+      saveToStorage(KEY, JSON.stringify(settingStorage));
+    }
+  };
+};
+// 8.a.1 tạo Class Task
+class Task{
+  constructor(task, owner, isDone){
+    this.task = task;
+    this.owner = owner;
+    this.isDone = isDone
+  };
+
+};

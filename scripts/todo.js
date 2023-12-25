@@ -13,21 +13,14 @@ const todoListContainer = document.getElementById("todo-list")
 let closeBtn = document.querySelector('.close')
 
 
-// 8.a.1 tạo Class Task
-class Task{
-  constructor(task, owner, isDone){
-    this.task = task;
-    this.owner = owner;
-    this.isDone = isDone
-  }
-}
-
 //lấy dữ liệu từ local nếu có hoặc tạo mới nếu chưa
 const KEY = "todo_ARR"
 const todoArr =
   getFromStorage(KEY) === undefined
     ? []
     : JSON.parse(getFromStorage(KEY));
+
+todoArr.forEach(task => task.__proto__ = Object.create(Task.prototype));
 
 // Lấy thông tin người dùng, nếu chưa đăng nhập thì dùng như local
 let currentUser = "currentUser"
@@ -53,7 +46,6 @@ function validateTask(task){
 async function renderTodo(todo){
   let html = ``
   //xóa trường để ghi lại
-  console.log(todoListContainer.innerHTML = "")
   let todoList = todoArr.filter(task => task.owner === userLogin.userName)
   
   //ghi vào html với index và dữ liệu
@@ -84,9 +76,7 @@ addBtn.addEventListener('click',function(){
     saveToStorage(KEY, JSON.stringify(todoArr));
   }
   renderTodo()
-})
-
-
+});
 
 //khi click vào một task
 todoListContainer.addEventListener('click', function(e){

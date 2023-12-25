@@ -31,4 +31,30 @@ function getLocalStorage(KEY = "USER_ARRAY"){
   });
 
   return {userDataArr, userDataID}
+};
+
+
+//dữ liệu người dùng hiện tại
+function getUserLogin(){
+  let currentUser = "currentUser";
+  const userLogin = 
+  getFromStorage(currentUser) === undefined
+    ? alert("please login or register to create and see your todo list")
+    : JSON.parse(getFromStorage(currentUser));
+
+  return userLogin;
+  
+};
+
+function getUserSetting(){
+  let userLogin = getUserLogin()
+  let setting = settingStorage.filter(set => set.owner === userLogin.userName)[0]
+  if (!setting) {
+    setting = new Setting(userLogin.userName, "General", 4);
+    settingStorage.push(setting)
+  }else{
+    setting.__proto__ = Object.create(Setting.prototype);
+  }
+  setting._renderSetting()
+  return setting
 }

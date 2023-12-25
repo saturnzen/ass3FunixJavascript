@@ -14,7 +14,6 @@ class UserLogin extends User{
 const {userDataArr, userDataID} = getLocalStorage()
 console.log(userDataArr);  
 // Handler các sự kiện
-const a = new UserLogin("nguyenne", "12345678");
 submitBtn.addEventListener('click', function(){
   currentUser = new User(userNameInput.value, passwordInput.value);
   const userLogin = currentUser._validateLogin();
@@ -24,9 +23,7 @@ submitBtn.addEventListener('click', function(){
     //lưu thông tin người dùng hiện tại xuống dưới LocalStorage.
     if (getFromStorage("currentUser") === undefined)
       {saveToStorage("currentUser", JSON.stringify(userLogin))};
-
-    window.location = window.location.href.slice(0,-16)+'index.html'
-  
+    window.location = window.location.href.slice(0,-16)+'index.html';
 });
 
 
